@@ -18,10 +18,10 @@
 ANDROID_ABI:UNINITIALIZED=arm64-v8a
 
 //No help, variable specified on the command line.
-ANDROID_NATIVE_API_LEVEL:UNINITIALIZED=21
+ANDROID_NDK:UNINITIALIZED=/Users/hua/android-sdk-macosx/ndk-bundle
 
 //No help, variable specified on the command line.
-ANDROID_NDK:UNINITIALIZED=/Users/hua/android-sdk-macosx/ndk-bundle
+ANDROID_PLATFORM:UNINITIALIZED=android-21
 
 //Path to a program.
 CMAKE_AR:FILEPATH=/Users/hua/android-sdk-macosx/ndk-bundle/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-ar
