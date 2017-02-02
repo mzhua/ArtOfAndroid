@@ -2,4 +2,6 @@
     <string name="app_name">Art Of Android</string>
     <string name="title_activity_second">SecondActivity</string>
     <string name="title_activity_messenger">MessengerActivity</string>
+    <string name="title_activity_book_provider">BookProviderActivity</string>
+    <string name="BookManagerActivity">BookManagerActivity</string>
 </resources>

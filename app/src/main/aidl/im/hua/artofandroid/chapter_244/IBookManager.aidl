@@ -1,10 +1,10 @@
 // IBookManager.aidl
-package im.hua.artofandroid.chapter_2.aidl;
+package im.hua.artofandroid.chapter_244;
+import im.hua.artofandroid.chapter_244.Book;
 
-import im.hua.artofandroid.chapter_2.aidl.Book;
 // Declare any non-default types here with import statements
 
 interface IBookManager {
-    List<Book> getBookList();
     void addBook(in Book book);
+    List<Book> getBookList();
 }
