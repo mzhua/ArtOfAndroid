@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="im.hua.artofandroid"
           xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-permission android:name="im.hua.BookProvider"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -9,7 +12,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -36,7 +40,8 @@
             android:name=".chapter_244.BookManagerService"
             android:process=":bookmanager"/>
 
-        <activity android:name=".chapter_244.BookManagerActivity"
+        <activity
+            android:name=".chapter_244.BookManagerActivity"
             android:label="@string/BookManagerActivity">
         </activity>
 
@@ -51,6 +56,18 @@
             android:label="@string/title_activity_book_provider"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".chapter_246.SocketActivity"
+            android:label="@string/title_activity_socket"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".chapter_25.BinderPoolActivity"
+            android:label="@string/title_activity_binder_pool"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <service android:name=".chapter_25.BinderPoolService"
+            android:process=":binderpool"/>
     </application>
 
 </manifest>
