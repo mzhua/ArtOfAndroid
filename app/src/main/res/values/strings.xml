@@ -6,4 +6,5 @@
     <string name="BookManagerActivity">BookManagerActivity</string>
     <string name="title_activity_socket">SocketActivity</string>
     <string name="title_activity_binder_pool">BinderPoolActivity</string>
+    <string name="title_activity_view_intercepter">ViewIntercepterActivity</string>
 </resources>

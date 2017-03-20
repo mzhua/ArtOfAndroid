@@ -1,3 +1,13 @@
 # ninja log v5
 0	166	0	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	3a8a964ec93eab92
 167	283	0	../../../../build/intermediates/cmake/debug/obj/mips/libnative-lib.so	abe408cd590aca3f
+0	138	0	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	3a8a964ec93eab92
+138	243	0	../../../../build/intermediates/cmake/debug/obj/mips/libnative-lib.so	abe408cd590aca3f
+0	27	0	build.ninja	d3408ba54d9f6ee4
+1	107	0	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	3f6b71cb1ed77089
+107	198	0	../../../../build/intermediates/cmake/debug/obj/mips/libnative-lib.so	d4eacdbe8d09fa5a
+0	111	0	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	3f6b71cb1ed77089
+111	214	0	../../../../build/intermediates/cmake/debug/obj/mips/libnative-lib.so	d4eacdbe8d09fa5a
+0	35	0	build.ninja	d3408ba54d9f6ee4
+0	109	0	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	3f6b71cb1ed77089
+109	221	0	../../../../build/intermediates/cmake/debug/obj/mips/libnative-lib.so	d4eacdbe8d09fa5a
