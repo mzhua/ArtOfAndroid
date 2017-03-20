@@ -9,6 +9,7 @@
     tools:context="im.hua.artofandroid.behavior.WeicoUserDetailActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -56,4 +57,14 @@
             android:text="@string/long_text"/>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginLeft="16dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="bottom|left"/>
+
 </android.support.design.widget.CoordinatorLayout>
