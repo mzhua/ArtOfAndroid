@@ -1,6 +1,7 @@
 .bugtags.log
 .gradle
 /.idea
+/app/.externalNativeBuild/
 .DS_Store
 build
 /captures

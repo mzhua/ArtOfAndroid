@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="im.hua.artofandroid"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="im.hua.artofandroid">
 
     <uses-permission android:name="im.hua.BookProvider"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -81,7 +81,25 @@
         </activity>
         <activity android:name=".chapter_4.CustomHorizontalScrollViewActivity">
         </activity>
-        <activity android:name=".chapter_81.FloatingWindowActivity">
+        <activity android:name=".chapter_81.FloatingWindowActivity"/>
+        <activity
+            android:name=".elementshare.FirstActivity"
+            android:label="@string/title_activity_first"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".elementshare.SecondActivity"
+            android:label="@string/title_activity_second"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".elementshare.ElementShareSecondActivity"
+            android:label="@string/title_activity_element_share_sencond"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".behavior.WeicoUserDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
