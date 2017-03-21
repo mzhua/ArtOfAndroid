@@ -36,6 +36,24 @@
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_arrow_back"
                 app:title="">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Title"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/white"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SubTitle"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/white"/>
+                </LinearLayout>
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -58,12 +76,13 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <ImageView
+    <ImageView android:id="@+id/iv_avatar"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_marginLeft="16dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"
+        app:layout_behavior="im.hua.artofandroid.behavior.HeaderImageBehavior"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|left"/>
 
