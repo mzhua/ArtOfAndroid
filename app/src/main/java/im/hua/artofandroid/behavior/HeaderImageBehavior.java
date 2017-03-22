@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -28,10 +27,6 @@ public class HeaderImageBehavior extends CoordinatorLayout.Behavior<View> {
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency) {
-        AppBarLayout appBarLayout = (AppBarLayout) dependency;
-        Log.d("HeaderImageBehavior", "appBarLayout.getTotalScrollRange():" + appBarLayout.getTotalScrollRange());
-        Log.d("HeaderImageBehavior", "appBarLayout.getHeight():" + appBarLayout.getHeight());
-        Log.d("HeaderImageBehavior", "mOutRect.height():" + mOutRect.height());
         return super.onDependentViewChanged(parent, child, dependency);
     }
 }
