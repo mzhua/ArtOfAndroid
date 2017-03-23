@@ -75,17 +75,17 @@ public class ImageViewBlurRender {
         mImageView.post(new Runnable() {
             @Override
             public void run() {
-                if (null == mDrawingCache) {
-                    mDrawingCache = mImageView.getDrawingCache();
-                    mAllocationIn = Allocation.createFromBitmap(mRenderScript, mDrawingCache);
-                    mScriptIntrinsicBlur.setInput(mAllocationIn);
-                }
                 invalidate(finalRadius);
             }
         });
     }
 
     private void invalidate(@FloatRange(from = 0.0f, to = 25.0f) float radius) {
+        if (null == mDrawingCache) {
+            mDrawingCache = mImageView.getDrawingCache();
+            mAllocationIn = Allocation.createFromBitmap(mRenderScript, mDrawingCache);
+            mScriptIntrinsicBlur.setInput(mAllocationIn);
+        }
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
         if (null == mOutBitmap) {
             mOutBitmap = Bitmap.createBitmap(mDrawingCache.getWidth(), mDrawingCache.getHeight(), Bitmap.Config.ARGB_8888);
@@ -98,11 +98,22 @@ public class ImageViewBlurRender {
         //Set the radius of the blur: 0 < radius <= 25
         mScriptIntrinsicBlur.setRadius(radius);
 
-        //Perform the Renderscript
-        mScriptIntrinsicBlur.forEach(mAllocationOut);
-        mAllocationOut.copyTo(mOutBitmap);
-
-        setImageBitmap(mOutBitmap);
+        new Thread("Thread:[blur]") {
+            @Override
+            public void run() {
+                super.run();
+                //Perform the Renderscript
+                mScriptIntrinsicBlur.forEach(mAllocationOut);
+                mAllocationOut.copyTo(mOutBitmap);
+                new Handler(Looper.getMainLooper())
+                        .post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setImageBitmap(mOutBitmap);
+                            }
+                        });
+            }
+        }.start();
     }
 
     private void setImageBitmap(final Bitmap bitmap) {
