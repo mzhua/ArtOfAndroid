@@ -2,6 +2,7 @@ package im.hua.artofandroid.behavior;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -86,6 +87,14 @@ public class ImageViewBlurRender {
     }
 
     private void invalidate(@FloatRange(from = 0.0f, to = 25.0f) float radius) {
+
+        new HandlerThread("blur") {
+            @Override
+            protected void onLooperPrepared() {
+                super.onLooperPrepared();
+
+            }
+        }.start();
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
         if (null == mOutBitmap) {
             mOutBitmap = Bitmap.createBitmap(mDrawingCache.getWidth(), mDrawingCache.getHeight(), Bitmap.Config.ARGB_8888);
