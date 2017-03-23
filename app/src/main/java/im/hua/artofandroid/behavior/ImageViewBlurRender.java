@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import im.hua.artofandroid.BuildConfig;
 
 /**
@@ -30,6 +33,7 @@ public class ImageViewBlurRender {
     private ScriptIntrinsicBlur mScriptIntrinsicBlur;
     private Handler mUiHandler;
     private boolean mIsRendering;
+    private ExecutorService mExecutorService;
 
     public ImageViewBlurRender() {
         mUiHandler = new Handler(Looper.getMainLooper());
@@ -76,25 +80,17 @@ public class ImageViewBlurRender {
         mImageView.post(new Runnable() {
             @Override
             public void run() {
-                if (null == mDrawingCache) {
-                    mDrawingCache = mImageView.getDrawingCache();
-                    mAllocationIn = Allocation.createFromBitmap(mRenderScript, mDrawingCache);
-                    mScriptIntrinsicBlur.setInput(mAllocationIn);
-                }
                 invalidate(finalRadius);
             }
         });
     }
 
     private void invalidate(@FloatRange(from = 0.0f, to = 25.0f) float radius) {
-
-        new HandlerThread("blur") {
-            @Override
-            protected void onLooperPrepared() {
-                super.onLooperPrepared();
-
-            }
-        }.start();
+        if (null == mDrawingCache) {
+            mDrawingCache = mImageView.getDrawingCache();
+            mAllocationIn = Allocation.createFromBitmap(mRenderScript, mDrawingCache);
+            mScriptIntrinsicBlur.setInput(mAllocationIn);
+        }
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
         if (null == mOutBitmap) {
             mOutBitmap = Bitmap.createBitmap(mDrawingCache.getWidth(), mDrawingCache.getHeight(), Bitmap.Config.ARGB_8888);
@@ -107,11 +103,42 @@ public class ImageViewBlurRender {
         //Set the radius of the blur: 0 < radius <= 25
         mScriptIntrinsicBlur.setRadius(radius);
 
-        //Perform the Renderscript
-        mScriptIntrinsicBlur.forEach(mAllocationOut);
-        mAllocationOut.copyTo(mOutBitmap);
+        if (mExecutorService == null) {
+            mExecutorService = Executors.newCachedThreadPool();
+        }
 
-        setImageBitmap(mOutBitmap);
+        mExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                //Perform the Renderscript
+                mScriptIntrinsicBlur.forEach(mAllocationOut);
+                mAllocationOut.copyTo(mOutBitmap);
+                new Handler(Looper.getMainLooper())
+                        .post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setImageBitmap(mOutBitmap);
+                            }
+                        });
+            }
+        });
+
+     /*   new Thread("Thread:[blur]") {
+            @Override
+            public void run() {
+                super.run();
+                //Perform the Renderscript
+                mScriptIntrinsicBlur.forEach(mAllocationOut);
+                mAllocationOut.copyTo(mOutBitmap);
+                new Handler(Looper.getMainLooper())
+                        .post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setImageBitmap(mOutBitmap);
+                            }
+                        });
+            }
+        }.start();*/
     }
 
     private void setImageBitmap(final Bitmap bitmap) {
@@ -125,6 +152,10 @@ public class ImageViewBlurRender {
     }
 
     private void destroy() {
+        if (mExecutorService != null) {
+            mExecutorService.shutdown();
+            mExecutorService = null;
+        }
         if (null != mDrawingCache) {
             mDrawingCache.recycle();
             mDrawingCache = null;

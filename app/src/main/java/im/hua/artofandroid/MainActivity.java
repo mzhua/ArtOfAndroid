@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 int[] attrs = new int[]{R.attr.selectableItemBackground};
                 TypedArray array = itemView.getContext().obtainStyledAttributes(attrs);
                 int backgroundResId = array.getResourceId(0, 0);
-                mTextView.setBackgroundDrawable(getResources().getDrawable(backgroundResId,getTheme()));
+                mTextView.setBackgroundDrawable(getResources().getDrawable(backgroundResId));
                 array.recycle();
             }
         }
