@@ -106,6 +106,10 @@
         </activity>
         <activity android:name=".chapter_12_1.BitmapFactoryActivity">
         </activity>
+        <activity android:name=".bezier.QuadBezierViewActivity">
+        </activity>
+        <activity android:name=".bezier.CubicBezierActivity">
+        </activity>
     </application>
 
 </manifest>
