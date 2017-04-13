@@ -24,6 +24,9 @@
             android:layout_height="wrap_content"
             android:text="控制点2"/>
     </RadioGroup>
+    <im.hua.artofandroid.bezier.MagicBallBezierView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
 
     <im.hua.artofandroid.bezier.CubicBezierView
         android:id="@+id/cbView"
