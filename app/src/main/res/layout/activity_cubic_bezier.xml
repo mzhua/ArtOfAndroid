@@ -24,7 +24,15 @@
             android:layout_height="wrap_content"
             android:text="控制点2"/>
     </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开始"/>
+
     <im.hua.artofandroid.bezier.MagicBallBezierView
+        android:id="@+id/ball"
         android:layout_width="match_parent"
         android:layout_height="200dp"/>
 
@@ -32,4 +40,5 @@
         android:id="@+id/cbView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </LinearLayout>

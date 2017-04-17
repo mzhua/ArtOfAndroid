@@ -1,5 +1,6 @@
 package im.hua.artofandroid.bezier;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,13 +12,15 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**
  * Created by hua on 2017/4/13.
  */
 
 public class MagicBallBezierView extends View {
-    public static final int CONTROL_OFFSET = 20;
+    private static final float C = 0.551915024494f;
+    private int CONTROL_OFFSET = 20;
     private float mCircleRadius;//dpi
 
     private Paint mPaint;
@@ -44,6 +47,7 @@ public class MagicBallBezierView extends View {
     private void init() {
         DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         mCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, displayMetrics);
+        CONTROL_OFFSET = (int) (C * mCircleRadius);
 
         mPaint = new Paint();
         mPaint.setColor(Color.BLUE);
@@ -62,22 +66,56 @@ public class MagicBallBezierView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        mLeftPoint.setData(-mCircleRadius, 0);
+        mCenterX = mCircleRadius;
+        mLeftX = mCenterX - mCircleRadius;
+        mRightX = mCenterX + mCircleRadius;
+
+        initFourPoint();
+    }
+
+    private synchronized void initFourPoint() {
+        mLeftPoint.setData(mLeftX, 0);
         mLeftPoint.setFirstControl(mLeftPoint.data.x, mLeftPoint.data.y + CONTROL_OFFSET);
         mLeftPoint.setSecondControl(mLeftPoint.data.x, mLeftPoint.data.y - CONTROL_OFFSET);
 
-        mTopPoint.setData(mLeftPoint.data.x + mCircleRadius, mLeftPoint.data.y - mCircleRadius);
+        mTopPoint.setData(mCenterX, mLeftPoint.data.y - mCircleRadius);
         mTopPoint.setFirstControl(mTopPoint.data.x - CONTROL_OFFSET, mTopPoint.data.y);
         mTopPoint.setSecondControl(mTopPoint.data.x + CONTROL_OFFSET, mTopPoint.data.y);
 
-        mRightPoint.setData(mLeftPoint.data.x + 2 * mCircleRadius + 30, mLeftPoint.data.y);
+        mRightPoint.setData(mRightX, mLeftPoint.data.y);
         mRightPoint.setFirstControl(mRightPoint.data.x, mRightPoint.data.y - CONTROL_OFFSET);
         mRightPoint.setSecondControl(mRightPoint.data.x, mRightPoint.data.y + CONTROL_OFFSET);
 
         mBottomPoint.setData(mTopPoint.data.x, mLeftPoint.data.y + mCircleRadius);
         mBottomPoint.setFirstControl(mBottomPoint.data.x + CONTROL_OFFSET, mBottomPoint.data.y);
         mBottomPoint.setSecondControl(mBottomPoint.data.x - CONTROL_OFFSET, mBottomPoint.data.y);
+    }
 
+    private float mCenterX = 0f;
+    private float mLeftX = 0f;
+    private float mRightX = 0f;
+
+    public void startAni() {
+        mCenterX = mCircleRadius;
+        mLeftX = mCenterX - mCircleRadius;
+        mRightX = mCenterX + mCircleRadius;
+
+        ValueAnimator centerAnimator = ValueAnimator.ofFloat(mCircleRadius, getWidth() - mCircleRadius);
+        centerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float fraction = animation.getAnimatedFraction();
+                mCenterX = (float) animation.getAnimatedValue();
+                mLeftX = (float) (mCenterX - mCircleRadius - Math.sin(Math.PI * fraction) * mCircleRadius / 2);
+                mRightX = (float) (mCenterX + mCircleRadius + Math.sin(Math.PI / 2 * fraction + Math.PI / 2) * mCircleRadius / 2);
+
+                initFourPoint();
+                postInvalidate();
+            }
+        });
+        centerAnimator.setDuration(1500);
+        centerAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        centerAnimator.start();
     }
 
     @Override
@@ -85,8 +123,13 @@ public class MagicBallBezierView extends View {
         super.onDraw(canvas);
         int width = getWidth();
         int height = getHeight();
-        canvas.translate(width / 2, height / 2);
+        canvas.translate(0, height / 2);
 
+//        drawLine(canvas);
+//        drawPoint(canvas);
+
+        mPaint.setColor(Color.BLUE);
+        mPaint.setStrokeWidth(1);
         canvas.drawLine(0, 0, width, 0, mPaint);
         canvas.drawLine(0, 0, 0, height, mPaint);
 
@@ -107,8 +150,37 @@ public class MagicBallBezierView extends View {
         mPath.cubicTo(mBottomPoint.secondControl.x, mBottomPoint.secondControl.y
                 , mLeftPoint.firstControl.x, mLeftPoint.firstControl.y
                 , mLeftPoint.data.x, mLeftPoint.data.y);
-
+        mPaint.setColor(Color.BLUE);
         canvas.drawPath(mPath, mPaint);
+    }
+
+    private void drawPoint(Canvas canvas) {
+        mPaint.setColor(Color.RED);
+        mPaint.setStrokeWidth(8);
+        canvas.drawPoint(mLeftPoint.data.x, mLeftPoint.data.y, mPaint);
+        canvas.drawPoint(mLeftPoint.firstControl.x, mLeftPoint.firstControl.y, mPaint);
+        canvas.drawPoint(mLeftPoint.secondControl.x, mLeftPoint.secondControl.y, mPaint);
+
+        canvas.drawPoint(mTopPoint.data.x, mTopPoint.data.y, mPaint);
+        canvas.drawPoint(mTopPoint.firstControl.x, mTopPoint.firstControl.y, mPaint);
+        canvas.drawPoint(mTopPoint.secondControl.x, mTopPoint.secondControl.y, mPaint);
+
+        canvas.drawPoint(mRightPoint.data.x, mRightPoint.data.y, mPaint);
+        canvas.drawPoint(mRightPoint.firstControl.x, mRightPoint.firstControl.y, mPaint);
+        canvas.drawPoint(mRightPoint.secondControl.x, mRightPoint.secondControl.y, mPaint);
+
+        canvas.drawPoint(mBottomPoint.data.x, mBottomPoint.data.y, mPaint);
+        canvas.drawPoint(mBottomPoint.firstControl.x, mBottomPoint.firstControl.y, mPaint);
+        canvas.drawPoint(mBottomPoint.secondControl.x, mBottomPoint.secondControl.y, mPaint);
+    }
+
+    private void drawLine(Canvas canvas) {
+        mPaint.setColor(Color.GRAY);
+        mPaint.setStrokeWidth(4);
+        canvas.drawLine(mLeftPoint.firstControl.x, mLeftPoint.firstControl.y, mLeftPoint.secondControl.x, mLeftPoint.secondControl.y, mPaint);
+        canvas.drawLine(mTopPoint.firstControl.x, mTopPoint.firstControl.y, mTopPoint.secondControl.x, mTopPoint.secondControl.y, mPaint);
+        canvas.drawLine(mRightPoint.firstControl.x, mRightPoint.firstControl.y, mRightPoint.secondControl.x, mRightPoint.secondControl.y, mPaint);
+        canvas.drawLine(mBottomPoint.firstControl.x, mBottomPoint.firstControl.y, mBottomPoint.secondControl.x, mBottomPoint.secondControl.y, mPaint);
     }
 
     /**
