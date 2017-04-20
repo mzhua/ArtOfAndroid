@@ -111,6 +111,8 @@
         </activity>
         <activity android:name=".bezier.CubicBezierActivity">
         </activity>
+        <activity android:name=".drawerlayout.DrawerActivity">
+        </activity>
     </application>
 
 </manifest>
