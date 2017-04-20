@@ -29,6 +29,7 @@ public class ImageViewBlurRender {
     private ScriptIntrinsicBlur mScriptIntrinsicBlur;
     private Handler mUiHandler;
     private boolean mIsRendering;
+    private Handler mHandler;
 
     public ImageViewBlurRender() {
         mUiHandler = new Handler(Looper.getMainLooper());
@@ -81,19 +82,7 @@ public class ImageViewBlurRender {
     }
 
     private void invalidate(@FloatRange(from = 0.0f, to = 25.0f) float radius) {
-        if (null == mDrawingCache) {
-            mDrawingCache = mImageView.getDrawingCache();
-            mAllocationIn = Allocation.createFromBitmap(mRenderScript, mDrawingCache);
-            mScriptIntrinsicBlur.setInput(mAllocationIn);
-        }
-        //Let's create an empty bitmap with the same size of the bitmap we want to blur
-        if (null == mOutBitmap) {
-            mOutBitmap = Bitmap.createBitmap(mDrawingCache.getWidth(), mDrawingCache.getHeight(), Bitmap.Config.ARGB_8888);
-            mAllocationOut = Allocation.createFromBitmap(mRenderScript, mOutBitmap);
-        } /*else {
-            mOutBitmap.eraseColor(mImageView.getResources().getColor(android.R.color.transparent));
-        }*/
-        //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
+        ensureAllocation();
 
         //Set the radius of the blur: 0 < radius <= 25
         mScriptIntrinsicBlur.setRadius(radius);
@@ -105,8 +94,10 @@ public class ImageViewBlurRender {
                 //Perform the Renderscript
                 mScriptIntrinsicBlur.forEach(mAllocationOut);
                 mAllocationOut.copyTo(mOutBitmap);
-                new Handler(Looper.getMainLooper())
-                        .post(new Runnable() {
+                if (null == mHandler) {
+                    mHandler = new Handler(Looper.getMainLooper());
+                }
+                mHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 setImageBitmap(mOutBitmap);
@@ -114,6 +105,18 @@ public class ImageViewBlurRender {
                         });
             }
         }.start();
+    }
+
+    private void ensureAllocation() {
+        if (null == mDrawingCache) {
+            mDrawingCache = mImageView.getDrawingCache();
+            mAllocationIn = Allocation.createFromBitmap(mRenderScript, mDrawingCache);
+            mScriptIntrinsicBlur.setInput(mAllocationIn);
+        }
+        if (null == mOutBitmap) {
+            mOutBitmap = Bitmap.createBitmap(mDrawingCache.getWidth(), mDrawingCache.getHeight(), Bitmap.Config.ARGB_8888);
+            mAllocationOut = Allocation.createFromBitmap(mRenderScript, mOutBitmap);
+        }
     }
 
     private void setImageBitmap(final Bitmap bitmap) {

@@ -101,6 +101,8 @@
             android:name=".behavior.WeicoUserDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".recyclerview.CustomLayoutManagerActivity">
+        </activity>
     </application>
 
 </manifest>
