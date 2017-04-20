@@ -2,6 +2,7 @@ package im.hua.artofandroid.behavior;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -12,6 +13,9 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import im.hua.artofandroid.BuildConfig;
 
@@ -29,7 +33,7 @@ public class ImageViewBlurRender {
     private ScriptIntrinsicBlur mScriptIntrinsicBlur;
     private Handler mUiHandler;
     private boolean mIsRendering;
-    private Handler mHandler;
+    private ExecutorService mExecutorService;
 
     public ImageViewBlurRender() {
         mUiHandler = new Handler(Looper.getMainLooper());
@@ -87,7 +91,27 @@ public class ImageViewBlurRender {
         //Set the radius of the blur: 0 < radius <= 25
         mScriptIntrinsicBlur.setRadius(radius);
 
-        new Thread("Thread:[blur]") {
+        if (mExecutorService == null) {
+            mExecutorService = Executors.newCachedThreadPool();
+        }
+
+        mExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                //Perform the Renderscript
+                mScriptIntrinsicBlur.forEach(mAllocationOut);
+                mAllocationOut.copyTo(mOutBitmap);
+                new Handler(Looper.getMainLooper())
+                        .post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setImageBitmap(mOutBitmap);
+                            }
+                        });
+            }
+        });
+
+     /*   new Thread("Thread:[blur]") {
             @Override
             public void run() {
                 super.run();
@@ -104,7 +128,7 @@ public class ImageViewBlurRender {
                             }
                         });
             }
-        }.start();
+        }.start();*/
     }
 
     private void ensureAllocation() {
@@ -130,6 +154,10 @@ public class ImageViewBlurRender {
     }
 
     private void destroy() {
+        if (mExecutorService != null) {
+            mExecutorService.shutdown();
+            mExecutorService = null;
+        }
         if (null != mDrawingCache) {
             mDrawingCache.recycle();
             mDrawingCache = null;

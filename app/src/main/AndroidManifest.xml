@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -101,7 +102,14 @@
             android:name=".behavior.WeicoUserDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".recyclerview.CustomLayoutManagerActivity">
+        <activity android:name=".recyclerview.CustomLayoutManagerActivity"/>
+        <activity android:name=".chapter_10_2_3.HandlerTestActivity">
+        </activity>
+        <activity android:name=".chapter_12_1.BitmapFactoryActivity">
+        </activity>
+        <activity android:name=".bezier.QuadBezierViewActivity">
+        </activity>
+        <activity android:name=".bezier.CubicBezierActivity">
         </activity>
     </application>
 
