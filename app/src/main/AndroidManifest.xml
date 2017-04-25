@@ -113,6 +113,8 @@
         </activity>
         <activity android:name=".drawerlayout.DrawerActivity">
         </activity>
+        <activity android:name=".keystore.KeyStoreActivity">
+        </activity>
     </application>
 
 </manifest>

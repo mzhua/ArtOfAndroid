@@ -25,7 +25,7 @@ public class DrawerLayout extends ViewGroup {
     private View mDrawerView;
     private View mContentView;
 
-    private final int mDrawerDefaultOffset = 300;
+    private final int mDrawerDefaultOffset = 0;
 
     private Paint mScrimPaint = new Paint();
 
@@ -96,14 +96,14 @@ public class DrawerLayout extends ViewGroup {
             public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
                 super.onViewPositionChanged(changedView, left, top, dx, dy);
                 if (isContentView(changedView)) {
-                    float contentViewOffsetPercent = 1.0f * left / mContentView.getWidth();
-                    mDrawerView.setLeft(-(int) ((1 - contentViewOffsetPercent) * mDrawerView.getWidth()));
+//                    float contentViewOffsetPercent = 1.0f * left / mContentView.getWidth();
+//                    mDrawerView.setLeft(-(int) ((1 - contentViewOffsetPercent) * mDrawerView.getWidth()));
 
-//                    ViewCompat.offsetLeftAndRight(mDrawerView, dx);
+                    ViewCompat.offsetLeftAndRight(mDrawerView, dx);
                 } else if (isDrawerView(changedView)) {
-//                    ViewCompat.offsetLeftAndRight(mContentView, dx);
-                    float contentViewOffsetPercent = 1.0f * Math.abs(left) / mDrawerView.getWidth();
-                    mContentView.setLeft((int) (contentViewOffsetPercent * mContentView.getWidth()));
+                    ViewCompat.offsetLeftAndRight(mContentView, dx);
+//                    float contentViewOffsetPercent = 1.0f * Math.abs(left) / mDrawerView.getWidth();
+//                    mContentView.setLeft((int) (contentViewOffsetPercent * mContentView.getWidth()));
                 }
                 invalidate();
             }
